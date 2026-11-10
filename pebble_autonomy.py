@@ -213,9 +213,26 @@ def perform_activity(activity, duration):
     if activity == "explore":
         return None
 
+    global pending_command
+
+    # Tell Three.js which activity animation to play.
+    with command_lock:
+        pending_command = {
+            "type": "activity",
+            "activity": activity,
+        }
+
     print(f"Pebble is spending time doing: {activity}")
 
+    # Let the activity continue for its chosen duration.
     time.sleep(duration)
+
+    # Tell Three.js to return to idle.
+    with command_lock:
+        pending_command = {
+            "type": "activity",
+            "activity": "idle",
+        }
 
     print(f"Pebble finished: {activity}")
     return True

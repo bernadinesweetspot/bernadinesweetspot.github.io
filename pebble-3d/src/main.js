@@ -86,6 +86,9 @@ let characterHeight = 1;
 let destination = null;
 let destinationSource = null;
 
+let stationaryActivity = null;
+let activityActions = {};
+
 // --------------------------------------------------
 // 5. Animation switching
 // --------------------------------------------------
@@ -120,6 +123,8 @@ function moveTo(x, z, source = 'user') {
         return;
     }
 
+    stationaryActivity = null;
+
     destination = new THREE.Vector3(
         THREE.MathUtils.clamp(x, -13, 13),
         pebble.position.y,
@@ -128,7 +133,9 @@ function moveTo(x, z, source = 'user') {
 
     destinationSource = source;
 
-    status.textContent = 'Pebble is walking to a destination...';
+    status.textContent = source === 'python'
+        ? 'Pebble is exploring...'
+        : 'Pebble is walking to a destination.';
 }
 
 // Make the movement function accessible for future testing
@@ -147,19 +154,56 @@ async function checkPythonCommand() {
 
         const data = await response.json();
 
-        if (data.command && data.command.type === 'move_to') {
+        if (!data.command) {
+            return;
+        }
+
+        if (data.command.type === 'move_to') {
             moveTo(
                 data.command.x,
                 data.command.z,
                 'python'
             );
 
-            console.log('Python gave Pebble a destination:', data.command);
+            console.log(
+                'Python gave Pebble a destination:',
+                data.command
+            );
+        }
+
+        if (data.command.type === 'activity') {
+            const activity = data.command.activity;
+
+            const activityLabels = {
+                explore: 'exploring',
+                rest: 'resting',
+                play: 'playing',
+                reflect: 'reflecting'
+            };
+
+            if (activity === 'idle') {
+                stationaryActivity = null;
+                playAnimation(idleAction);
+                status.textContent = 'Pebble is idle.';
+            } else {
+                const action = activityActions[activity];
+
+                if (action) {
+                    stationaryActivity = activity;
+                    playAnimation(action);
+
+                    status.textContent =
+                        `Pebble is ${activityLabels[activity] || activity}...`;
+
+                    console.log(`Playing ${activity} animation.`);
+                } else {
+                    console.warn(`No animation found for: ${activity}`);
+                }
+            }
         }
 
     } catch (error) {
         // Python may not be running yet.
-        // Avoid filling the console with connection errors.
     }
 }
 
@@ -268,6 +312,18 @@ loader.load(
             /walk/i.test(clip.name) && !/start|stop/i.test(clip.name)
         );
 
+        const restingClip = gltf.animations.find((clip) =>
+            /resting/i.test(clip.name)
+        );
+
+        const playingClip = gltf.animations.find((clip) =>
+            /playing/i.test(clip.name)
+        );
+
+        const reflectingClip = gltf.animations.find((clip) =>
+            /reflecting/i.test(clip.name)
+        );
+
         // Create the animation actions.
         if (idleClip) {
             idleAction = mixer.clipAction(idleClip);
@@ -275,6 +331,18 @@ loader.load(
 
         if (walkClip) {
             walkAction = mixer.clipAction(walkClip);
+        }
+
+        if (restingClip) {
+            activityActions.rest = mixer.clipAction(restingClip);
+        }
+
+        if (playingClip) {
+            activityActions.play = mixer.clipAction(playingClip);
+        }
+
+        if (reflectingClip) {
+            activityActions.reflect = mixer.clipAction(reflectingClip);
         }
 
         // Start with idle.
@@ -370,8 +438,10 @@ function animate() {
             }
 
         } else {
-            // No destination means Pebble should be idle.
-            playAnimation(idleAction);
+            // Only play idle if Pebble isn't doing another activity.
+            if (!stationaryActivity) {
+                playAnimation(idleAction);
+            }
         }
 
         // Keep the camera following Pebble.
