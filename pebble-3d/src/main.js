@@ -75,37 +75,19 @@ let activeAction = null;
 const clock = new THREE.Clock();
 const status = document.querySelector('#status');
 
-const keys = new Set();
-
 const moveSpeed = 2;
 const turnSpeed = 8;
+const arrivalDistance = 0.08;
 
 let cameraOffset = null;
 let characterHeight = 1;
 
-// --------------------------------------------------
-// 5. Keyboard controls
-// --------------------------------------------------
-
-window.addEventListener('keydown', (event) => {
-    const key = event.key.toLowerCase();
-
-    if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(key)) {
-        event.preventDefault();
-        keys.add(key);
-    }
-});
-
-window.addEventListener('keyup', (event) => {
-    keys.delete(event.key.toLowerCase());
-});
-
-window.addEventListener('blur', () => {
-    keys.clear();
-});
+// The destination Pebble is currently walking towards.
+let destination = null;
+let destinationSource = null;
 
 // --------------------------------------------------
-// 6. Animation switching
+// 5. Animation switching
 // --------------------------------------------------
 
 function playAnimation(nextAction) {
@@ -127,7 +109,112 @@ function playAnimation(nextAction) {
 }
 
 // --------------------------------------------------
-// 7. Load Pebble
+// 6. Destination movement
+// --------------------------------------------------
+
+// Give Pebble a new destination.
+// This function can eventually be called by Python.
+
+function moveTo(x, z, source = 'user') {
+    if (!pebble) {
+        return;
+    }
+
+    destination = new THREE.Vector3(
+        THREE.MathUtils.clamp(x, -13, 13),
+        pebble.position.y,
+        THREE.MathUtils.clamp(z, -13, 13)
+    );
+
+    destinationSource = source;
+
+    status.textContent = 'Pebble is walking to a destination...';
+}
+
+// Make the movement function accessible for future testing
+// and communication with the Python brain.
+
+window.pebbleMoveTo = moveTo;
+// --------------------------------------------------
+// Receive movement instructions from Python
+// --------------------------------------------------
+
+async function checkPythonCommand() {
+    try {
+        const response = await fetch(
+            'http://127.0.0.1:8765/api/command'
+        );
+
+        const data = await response.json();
+
+        if (data.command && data.command.type === 'move_to') {
+            moveTo(
+                data.command.x,
+                data.command.z,
+                'python'
+            );
+
+            console.log('Python gave Pebble a destination:', data.command);
+        }
+
+    } catch (error) {
+        // Python may not be running yet.
+        // Avoid filling the console with connection errors.
+    }
+}
+
+// Check for new Python instructions twice per second.
+setInterval(checkPythonCommand, 500);
+
+
+// Tell Python when Pebble reaches a Python-selected destination.
+async function reportArrival() {
+    try {
+        await fetch('http://127.0.0.1:8765/api/arrived', {
+            method: 'POST'
+        });
+
+        console.log('Pebble reported arrival to Python.');
+
+    } catch (error) {
+        console.error('Could not report arrival to Python:', error);
+    }
+}
+
+// --------------------------------------------------
+// 7. Click-to-move controls
+// --------------------------------------------------
+
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+
+renderer.domElement.addEventListener('pointerdown', (event) => {
+    if (!pebble) {
+        return;
+    }
+
+    // Find the mouse position on the screen.
+    const bounds = renderer.domElement.getBoundingClientRect();
+
+    pointer.x = ((event.clientX - bounds.left) / bounds.width) * 2 - 1;
+    pointer.y = -((event.clientY - bounds.top) / bounds.height) * 2 + 1;
+
+    // Project the mouse position into the 3D scene.
+    raycaster.setFromCamera(pointer, camera);
+
+    // Check whether the mouse clicked the floor.
+    const intersections = raycaster.intersectObject(floor);
+
+    if (intersections.length > 0) {
+        const point = intersections[0].point;
+
+        // Tell Pebble to walk to the clicked position.
+        moveTo(point.x, point.z);
+    }
+});
+
+// --------------------------------------------------
+// 8. Load Pebble
 // --------------------------------------------------
 
 loader.load(
@@ -172,7 +259,7 @@ loader.load(
         // Set up the animation system.
         mixer = new THREE.AnimationMixer(pebble);
 
-        // Find only the idle and walk animations.
+        // Find the idle and in-place walk animations.
         const idleClip = gltf.animations.find((clip) =>
             /idle/i.test(clip.name)
         );
@@ -195,9 +282,8 @@ loader.load(
             playAnimation(idleAction);
         }
 
-        // Show which animations were found.
         status.textContent =
-            `Idle: ${!!idleAction} | Walk: ${!!walkAction}`;
+            `Idle: ${!!idleAction} | Walk: ${!!walkAction} | Click the floor to move Pebble`;
 
         console.log('Pebble loaded successfully!');
         gltf.animations.forEach((clip) => {
@@ -222,7 +308,7 @@ loader.load(
 );
 
 // --------------------------------------------------
-// 8. Movement and animation loop
+// 9. Movement and animation loop
 // --------------------------------------------------
 
 function animate() {
@@ -231,44 +317,60 @@ function animate() {
     const delta = Math.min(clock.getDelta(), 0.05);
 
     if (pebble) {
-        let moveX = 0;
-        let moveZ = 0;
-
-        // Read keyboard input.
-        if (keys.has('w') || keys.has('arrowup')) moveZ -= 1;
-        if (keys.has('s') || keys.has('arrowdown')) moveZ += 1;
-        if (keys.has('a') || keys.has('arrowleft')) moveX -= 1;
-        if (keys.has('d') || keys.has('arrowright')) moveX += 1;
-
-        const isMoving = moveX !== 0 || moveZ !== 0;
-
-        if (isMoving) {
-            // Calculate the direction of travel.
-            const direction = new THREE.Vector3(moveX, 0, moveZ).normalize();
-
-            // Turn Pebble towards the direction of travel.
-            const targetRotation = Math.atan2(direction.x, direction.z);
-
-            const rotationDifference = Math.atan2(
-                Math.sin(targetRotation - pebble.rotation.y),
-                Math.cos(targetRotation - pebble.rotation.y)
+        if (destination) {
+            // Calculate the distance to the destination.
+            const direction = new THREE.Vector3(
+                destination.x - pebble.position.x,
+                0,
+                destination.z - pebble.position.z
             );
 
-            pebble.rotation.y += rotationDifference * Math.min(1, turnSpeed * delta);
+            const distance = direction.length();
 
-            // Move Pebble.
-            pebble.position.x += direction.x * moveSpeed * delta;
-            pebble.position.z += direction.z * moveSpeed * delta;
+            // Has Pebble reached its destination?
+            if (distance <= arrivalDistance) {
+                destination = null;
 
-            // Keep Pebble inside the floor.
-            pebble.position.x = THREE.MathUtils.clamp(pebble.position.x, -13, 13);
-            pebble.position.z = THREE.MathUtils.clamp(pebble.position.z, -13, 13);
+                const completedSource = destinationSource;
+                destinationSource = null;
 
-            // Play the looping walk animation.
-            playAnimation(walkAction);
+                playAnimation(idleAction);
+                status.textContent = 'Pebble has arrived.';
+
+                if (completedSource === 'python') {
+                    reportArrival();
+                }
+
+            } else {
+                // Work out the direction Pebble needs to face.
+                direction.normalize();
+
+                const targetRotation = Math.atan2(
+                    direction.x,
+                    direction.z
+                );
+
+                // Turn smoothly towards the destination.
+                const rotationDifference = Math.atan2(
+                    Math.sin(targetRotation - pebble.rotation.y),
+                    Math.cos(targetRotation - pebble.rotation.y)
+                );
+
+                pebble.rotation.y +=
+                    rotationDifference * Math.min(1, turnSpeed * delta);
+
+                // Move towards the destination without overshooting it.
+                const step = Math.min(moveSpeed * delta, distance);
+
+                pebble.position.x += direction.x * step;
+                pebble.position.z += direction.z * step;
+
+                // Play the looping walk animation.
+                playAnimation(walkAction);
+            }
 
         } else {
-            // Return to the looping idle animation.
+            // No destination means Pebble should be idle.
             playAnimation(idleAction);
         }
 
@@ -294,7 +396,7 @@ function animate() {
 animate();
 
 // --------------------------------------------------
-// 9. Window resizing
+// 10. Window resizing
 // --------------------------------------------------
 
 window.addEventListener('resize', () => {

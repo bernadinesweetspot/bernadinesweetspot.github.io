@@ -1,0 +1,304 @@
+
+import json
+import random
+import threading
+import time
+
+from datetime import datetime, timedelta
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+
+
+# --------------------------------------------------
+# FILE LOCATIONS
+# --------------------------------------------------
+
+PROJECT_ROOT = Path(__file__).resolve().parent
+DATA_FOLDER = PROJECT_ROOT / "pebble_data"
+STATE_FILE = DATA_FOLDER / "state.json"
+
+
+# --------------------------------------------------
+# ACTIVITY SETTINGS
+# --------------------------------------------------
+
+ACTIVITIES = ["explore", "rest", "play", "reflect"]
+
+MIN_ACTIVITY_SECONDS = 10
+MAX_ACTIVITY_SECONDS = 20
+
+# Maximum time Pebble will wait for an exploration.
+EXPLORATION_TIMEOUT = 60
+
+SERVER_ADDRESS = "127.0.0.1"
+SERVER_PORT = 8765
+
+
+# --------------------------------------------------
+# SHARED COMMUNICATION
+# --------------------------------------------------
+
+pending_command = None
+command_lock = threading.Lock()
+exploration_finished = threading.Event()
+
+
+# --------------------------------------------------
+# TIME AND STATE HELPERS
+# --------------------------------------------------
+
+def current_time():
+    return datetime.now().astimezone()
+
+
+def timestamp():
+    return current_time().isoformat(timespec="seconds")
+
+
+def load_state():
+    DATA_FOLDER.mkdir(parents=True, exist_ok=True)
+
+    if not STATE_FILE.exists():
+        return {
+            "name": "Pebble",
+            "status": "not_started",
+            "current_activity": None,
+            "last_activity": None,
+            "created": None,
+            "last_updated": None,
+        }
+
+    with STATE_FILE.open("r", encoding="utf-8") as file:
+        return json.load(file)
+
+
+def save_state(state):
+    state["last_updated"] = timestamp()
+
+    with STATE_FILE.open("w", encoding="utf-8") as file:
+        json.dump(state, file, indent=4)
+
+
+# --------------------------------------------------
+# HTTP CONNECTION TO THREE.JS
+# --------------------------------------------------
+
+class PebbleRequestHandler(BaseHTTPRequestHandler):
+
+    def send_json(self, data):
+        response = json.dumps(data).encode("utf-8")
+
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(response)))
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.end_headers()
+
+        self.wfile.write(response)
+
+    def do_OPTIONS(self):
+        self.send_response(204)
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.end_headers()
+
+    def do_GET(self):
+        global pending_command
+
+        if self.path != "/api/command":
+            self.send_json({"error": "Unknown endpoint"})
+            return
+
+        with command_lock:
+            command = pending_command
+            pending_command = None
+
+        self.send_json({"command": command})
+
+    def do_POST(self):
+        if self.path != "/api/arrived":
+            self.send_json({"error": "Unknown endpoint"})
+            return
+
+        content_length = int(self.headers.get("Content-Length", 0))
+        self.rfile.read(content_length)
+
+        exploration_finished.set()
+
+        self.send_json({"received": True})
+
+    def log_message(self, format, *args):
+        # Keep routine browser polling out of the console.
+        pass
+
+
+def start_server():
+    server = ThreadingHTTPServer(
+        (SERVER_ADDRESS, SERVER_PORT),
+        PebbleRequestHandler,
+    )
+
+    server_thread = threading.Thread(
+        target=server.serve_forever,
+        daemon=True,
+    )
+
+    server_thread.start()
+
+    print(f"Python connection ready at http://{SERVER_ADDRESS}:{SERVER_PORT}")
+
+    return server
+
+
+# --------------------------------------------------
+# ACTIVITY SELECTION
+# --------------------------------------------------
+
+def choose_activity(previous_activity):
+    available = [
+        activity
+        for activity in ACTIVITIES
+        if activity != previous_activity
+    ]
+
+    return random.choice(available)
+
+
+# --------------------------------------------------
+# EXPLORATION
+# --------------------------------------------------
+
+def explore(state):
+    global pending_command
+
+    destination_x = round(random.uniform(-12, 12), 2)
+    destination_z = round(random.uniform(-12, 12), 2)
+
+    command = {
+        "type": "move_to",
+        "x": destination_x,
+        "z": destination_z,
+    }
+
+    exploration_finished.clear()
+
+    with command_lock:
+        pending_command = command
+
+    print(
+        f"Pebble is exploring towards "
+        f"({destination_x}, {destination_z})."
+    )
+
+    finished = exploration_finished.wait(
+        timeout=EXPLORATION_TIMEOUT
+    )
+
+    if finished:
+        print("Pebble arrived at their destination.")
+        return True
+
+    print("Pebble's exploration timed out.")
+    return False
+
+
+# --------------------------------------------------
+# OTHER ACTIVITIES
+# --------------------------------------------------
+
+def perform_activity(activity, duration):
+    if activity == "explore":
+        return None
+
+    print(f"Pebble is spending time doing: {activity}")
+
+    time.sleep(duration)
+
+    print(f"Pebble finished: {activity}")
+    return True
+
+
+# --------------------------------------------------
+# AUTONOMOUS LOOP
+# --------------------------------------------------
+
+def run_pebble():
+    global pending_command
+    state = load_state()
+
+    if state.get("created") is None:
+        state["created"] = timestamp()
+
+    state["status"] = "running"
+    save_state(state)
+
+    server = start_server()
+
+    print("\nPebble is now autonomous.")
+    print("Open the 3D environment in your browser.")
+    print("Press CTRL+C to stop Pebble.\n")
+
+    try:
+        while True:
+            previous_activity = state.get("last_activity")
+            activity = choose_activity(previous_activity)
+
+            duration = random.randint(
+                MIN_ACTIVITY_SECONDS,
+                MAX_ACTIVITY_SECONDS,
+            )
+
+            state["current_activity"] = activity
+
+            started = current_time()
+            state["activity_started"] = started.isoformat(
+                timespec="seconds"
+            )
+
+            state["activity_ends"] = (
+                started + timedelta(seconds=duration)
+            ).isoformat(timespec="seconds")
+
+            save_state(state)
+
+            print(f"\nPebble decided to: {activity}")
+
+            if activity == "explore":
+                completed = explore(state)
+            else:
+                completed = perform_activity(activity, duration)
+
+            if completed is True:
+                state["last_activity"] = activity
+
+            state["current_activity"] = None
+            state.pop("activity_started", None)
+            state.pop("activity_ends", None)
+
+            save_state(state)
+
+    except KeyboardInterrupt:
+        print("\nStopping Pebble...")
+
+    finally:
+        with command_lock:
+            pending_command = None
+
+        state["status"] = "stopped"
+        state["current_activity"] = None
+        state.pop("activity_started", None)
+        state.pop("activity_ends", None)
+
+        save_state(state)
+
+        server.shutdown()
+        server.server_close()
+
+        print("Pebble has stopped safely.")
+
+
+if __name__ == "__main__":
+    run_pebble()
