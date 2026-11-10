@@ -4,6 +4,8 @@ import random
 import threading
 import time
 
+from pebble_decisions import choose_activity
+from pebble_reflection import reflect
 from datetime import datetime, timedelta
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -16,7 +18,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent
 DATA_FOLDER = PROJECT_ROOT / "pebble_data"
 STATE_FILE = DATA_FOLDER / "state.json"
-
+DIARY_FILE = DATA_FOLDER / "diary.json"
 
 # --------------------------------------------------
 # ACTIVITY SETTINGS
@@ -77,6 +79,37 @@ def save_state(state):
 
     with STATE_FILE.open("w", encoding="utf-8") as file:
         json.dump(state, file, indent=4)
+
+
+def record_activity(activity):
+    # Load Pebble's existing diary.
+    if DIARY_FILE.exists():
+        with DIARY_FILE.open("r", encoding="utf-8") as file:
+            diary = json.load(file)
+    else:
+        diary = []
+
+    # Describe what Pebble actually completed.
+    descriptions = {
+        "explore": "Pebble finished exploring.",
+        "rest": "Pebble spent time resting.",
+        "play": "Pebble spent time playing.",
+        "reflect": "Pebble spent time reflecting.",
+    }
+
+    entry = {
+        "experience": descriptions[activity],
+        "type": "activity",
+        "timestamp": timestamp(),
+    }
+
+    diary.append(entry)
+
+    # Save the updated diary.
+    with DIARY_FILE.open("w", encoding="utf-8") as file:
+        json.dump(diary, file, indent=4)
+
+    print(f"Pebble recorded a diary entry: {entry['experience']}")
 
 
 # --------------------------------------------------
@@ -151,20 +184,6 @@ def start_server():
     print(f"Python connection ready at http://{SERVER_ADDRESS}:{SERVER_PORT}")
 
     return server
-
-
-# --------------------------------------------------
-# ACTIVITY SELECTION
-# --------------------------------------------------
-
-def choose_activity(previous_activity):
-    available = [
-        activity
-        for activity in ACTIVITIES
-        if activity != previous_activity
-    ]
-
-    return random.choice(available)
 
 
 # --------------------------------------------------
@@ -290,6 +309,8 @@ def run_pebble():
 
             if completed is True:
                 state["last_activity"] = activity
+                record_activity(activity)
+                reflect()
 
             state["current_activity"] = None
             state.pop("activity_started", None)

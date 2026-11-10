@@ -1,0 +1,25 @@
+[
+    {
+        "thought": "I've been trying a few different activities lately.",
+        "type": "reflection",
+        "timestamp": "2026-11-10T22:46:10+00:00"
+    },
+    {
+        "thought": "I've been spending time thinking about things lately.",
+        "type": "reflection",
+        "focus_activity": "reflect",
+        "timestamp": "2026-11-10T22:59:38+00:00"
+    },
+    {
+        "thought": "I've been exploring quite a bit lately. I wonder what else I might discover.",
+        "type": "reflection",
+        "focus_activity": "explore",
+        "timestamp": "2026-11-10T23:00:44+00:00"
+    },
+    {
+        "thought": "I've been playing quite a bit lately. I wonder what else I could do?",
+        "type": "reflection",
+        "focus_activity": "play",
+        "timestamp": "2026-11-10T23:01:27+00:00"
+    }
+]
