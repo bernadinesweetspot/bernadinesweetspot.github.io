@@ -1,0 +1,67 @@
+﻿import json
+from pathlib import Path
+
+
+def load_json_file(file_path):
+    """Load a JSON file and report any problems."""
+    try:
+        with file_path.open("r", encoding="utf-8") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        print(f"ERROR: File not found: {file_path}")
+    except PermissionError:
+        print(f"ERROR: Permission denied: {file_path}")
+    except OSError as error:
+        print(f"ERROR: Could not read {file_path}: {error}")
+    except json.JSONDecodeError as error:
+        print(f"ERROR: Invalid JSON in {file_path}: {error}")
+
+    return None
+
+
+def main():
+    # Find the folder containing this Python script.
+    project_folder = Path(__file__).resolve().parent
+
+    # Find Pebble's data folder.
+    data_folder = project_folder / "pebble_data"
+
+    print("=" * 33)
+    print("       Welcome to Pebble!")
+    print("=" * 33)
+
+    # Load Pebble's three data files.
+    memory = load_json_file(data_folder / "memory.json")
+    diary = load_json_file(data_folder / "diary.json")
+    state = load_json_file(data_folder / "state.json")
+
+    # Stop if any data could not be loaded.
+    if memory is None or diary is None or state is None:
+        print("\nPebble could not load all its data.")
+        return
+
+    # Check that each file contains the expected kind of data.
+    if not isinstance(memory, dict):
+        print("ERROR: memory.json must contain an object.")
+        return
+
+    if not isinstance(diary, list):
+        print("ERROR: diary.json must contain a list.")
+        return
+
+    if not isinstance(state, dict):
+        print("ERROR: state.json must contain an object.")
+        return
+
+    # Display Pebble's current information.
+    print(f"\nName: {state.get('name', 'Unknown')}")
+    print(f"Status: {state.get('status', 'Unknown')}")
+    print(f"\nMemories recorded: {len(memory)}")
+    print(f"Diary entries: {len(diary)}")
+
+    print("\nPebble's data loaded successfully!")
+    print("=" * 33)
+
+
+if __name__ == "__main__":
+    main()

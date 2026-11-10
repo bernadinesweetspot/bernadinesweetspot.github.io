@@ -1,0 +1,17 @@
+[
+    {
+        "experience": "Pebble successfully learned to save diary entries!",
+        "type": "development",
+        "timestamp": "2026-11-10"
+    },
+    {
+        "experience": "Pebble learned how to record experiences!",
+        "timestamp": "2026-11-10T14:21:03.364719+00:00",
+        "type": "user_recorded"
+    },
+    {
+        "experience": "Pebble is trying to remember things.",
+        "timestamp": "2026-11-10T14:27:15.454101+00:00",
+        "type": "user_recorded"
+    }
+]

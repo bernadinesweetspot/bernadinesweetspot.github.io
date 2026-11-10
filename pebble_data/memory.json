@@ -1,0 +1,32 @@
+{
+    "memories": [
+        {
+            "id": 1,
+            "content": "The user is teaching Pebble to remember things.",
+            "category": "experience",
+            "created": "2026-11-10T14:40:01.211724+00:00",
+            "connections": [
+                2
+            ]
+        },
+        {
+            "id": 2,
+            "content": "Pebble enjoys exploring.",
+            "category": "experience",
+            "created": "2026-11-10T14:43:38.599336+00:00",
+            "connections": [
+                3,
+                1
+            ]
+        },
+        {
+            "id": 3,
+            "content": "Pebble likes the ocean.",
+            "category": "experience",
+            "created": "2026-11-10T14:52:21.777463+00:00",
+            "connections": [
+                2
+            ]
+        }
+    ]
+}
