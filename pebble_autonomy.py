@@ -1,4 +1,3 @@
-
 import json
 import random
 import threading
@@ -6,6 +5,8 @@ import time
 
 from pebble_decisions import choose_activity
 from pebble_reflection import reflect
+from pebble_environment.environment import EnvironmentTracker
+
 from datetime import datetime, timedelta
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -112,6 +113,34 @@ def record_activity(activity):
     print(f"Pebble recorded a diary entry: {entry['experience']}")
 
 
+def record_location_visit(location):
+    """Record Pebble's visit to a recognised location."""
+
+    # Load Pebble's existing diary.
+    if DIARY_FILE.exists():
+        with DIARY_FILE.open("r", encoding="utf-8") as file:
+            diary = json.load(file)
+    else:
+        diary = []
+
+    # Describe the location Pebble visited.
+    entry = {
+        "experience": f"Pebble visited {location['name']}.",
+        "type": "location_visit",
+        "location_id": location["id"],
+        "location_name": location["name"],
+        "timestamp": timestamp(),
+    }
+
+    diary.append(entry)
+
+    # Save the updated diary.
+    with DIARY_FILE.open("w", encoding="utf-8") as file:
+        json.dump(diary, file, indent=4)
+
+    print(f"Pebble recorded a location visit: {location['name']}")
+
+
 # --------------------------------------------------
 # HTTP CONNECTION TO THREE.JS
 # --------------------------------------------------
@@ -190,7 +219,8 @@ def start_server():
 # EXPLORATION
 # --------------------------------------------------
 
-def explore(state):
+
+def explore(state, environment_tracker):
     global pending_command
 
     destination_x = round(random.uniform(-12, 12), 2)
@@ -218,6 +248,32 @@ def explore(state):
 
     if finished:
         print("Pebble arrived at their destination.")
+
+        # Check whether Pebble entered or left a known location.
+        events = environment_tracker.update_position(
+            destination_x,
+            destination_z
+        )
+
+        for event in events:
+
+            if event["type"] == "entered_location":
+                location = event["location"]
+
+                print(
+                    f"Pebble discovered they are at "
+                    f"{location['name']}."
+                )
+
+                record_location_visit(location)
+
+            elif event["type"] == "left_location":
+                location = event["location"]
+
+                print(
+                    f"Pebble left {location['name']}."
+                )
+
         return True
 
     print("Pebble's exploration timed out.")
@@ -273,6 +329,8 @@ def run_pebble():
 
     server = start_server()
 
+    environment_tracker = EnvironmentTracker()
+
     print("\nPebble is now autonomous.")
     print("Open the 3D environment in your browser.")
     print("Press CTRL+C to stop Pebble.\n")
@@ -303,7 +361,7 @@ def run_pebble():
             print(f"\nPebble decided to: {activity}")
 
             if activity == "explore":
-                completed = explore(state)
+                completed = explore(state, environment_tracker)
             else:
                 completed = perform_activity(activity, duration)
 

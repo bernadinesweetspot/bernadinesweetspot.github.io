@@ -43,21 +43,326 @@ scene.add(sun);
 // 3. Floor
 // --------------------------------------------------
 
+
+// --------------------------------------------------
+// 3. Grassy clearing
+// --------------------------------------------------
+
+// Create the main grassy ground.
 const floorGeometry = new THREE.PlaneGeometry(30, 30);
 
 const floorMaterial = new THREE.MeshStandardMaterial({
-    color: 0xb8c9bd,
+    color: 0x78a96b,
     roughness: 1
 });
 
 const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+
 floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
+
 scene.add(floor);
 
-const grid = new THREE.GridHelper(30, 30, 0x809b91, 0x9eafa5);
-grid.position.y = 0.01;
-scene.add(grid);
+ // --------------------------------------------------
+ // 4. Woodland trees
+ // --------------------------------------------------
+
+// Shared materials.
+const trunkMaterial = new THREE.MeshStandardMaterial({
+    color: 0x795238,
+    roughness: 1
+});
+
+const leafMaterials = [
+    new THREE.MeshStandardMaterial({ color: 0x376b43, roughness: 1 }),
+    new THREE.MeshStandardMaterial({ color: 0x477d4b, roughness: 1 }),
+    new THREE.MeshStandardMaterial({ color: 0x568b50, roughness: 1 })
+];
+
+// Shared tree shapes.
+const trunkGeometry = new THREE.CylinderGeometry(
+    0.18, 0.25, 1.6, 7
+);
+
+const lowerLeavesGeometry = new THREE.ConeGeometry(
+    1.25, 2.5, 7
+);
+
+const upperLeavesGeometry = new THREE.ConeGeometry(
+    0.95, 2.1, 7
+);
+
+// Create one tree.
+function createTree(x, z, scale = 1, leafColour = 0) {
+    const tree = new THREE.Group();
+
+    const trunk = new THREE.Mesh(
+        trunkGeometry,
+        trunkMaterial
+    );
+
+    trunk.position.y = 0.8;
+    trunk.castShadow = true;
+    tree.add(trunk);
+
+    const lowerLeaves = new THREE.Mesh(
+        lowerLeavesGeometry,
+        leafMaterials[leafColour]
+    );
+
+    lowerLeaves.position.y = 2.5;
+    lowerLeaves.castShadow = true;
+    tree.add(lowerLeaves);
+
+    const upperLeaves = new THREE.Mesh(
+        upperLeavesGeometry,
+        leafMaterials[(leafColour + 1) % leafMaterials.length]
+    );
+
+    upperLeaves.position.y = 3.6;
+    upperLeaves.castShadow = true;
+    tree.add(upperLeaves);
+
+    tree.position.set(x, 0, z);
+    tree.scale.setScalar(scale);
+
+    scene.add(tree);
+}
+
+// Place trees around the outside of the clearing.
+const treePositions = [
+    [-14, -14, 1.0, 0],
+    [-9, -14, 1.1, 1],
+    [-3, -14, 0.9, 2],
+    [4, -14, 1.2, 0],
+    [10, -14, 1.0, 1],
+    [14, -10, 1.1, 2],
+    [14, -3, 0.9, 0],
+    [14, 5, 1.2, 1],
+    [12, 14, 1.0, 2],
+    [5, 14, 1.1, 0],
+    [-3, 14, 0.9, 1],
+    [-11, 14, 1.2, 2],
+    [-14, 8, 1.0, 0],
+    [-14, 0, 1.1, 1]
+];
+
+treePositions.forEach(([x, z, scale, colour]) => {
+    createTree(x, z, scale, colour);
+});
+
+
+ // --------------------------------------------------
+ // 5. Woodland details
+ // --------------------------------------------------
+
+// Shared scenery materials.
+const rockMaterial = new THREE.MeshStandardMaterial({
+    color: 0x858b80,
+    roughness: 1
+});
+
+const bushMaterials = [
+    new THREE.MeshStandardMaterial({ color: 0x477b43, roughness: 1 }),
+    new THREE.MeshStandardMaterial({ color: 0x568c4b, roughness: 1 }),
+    new THREE.MeshStandardMaterial({ color: 0x699b56, roughness: 1 })
+];
+
+const logMaterial = new THREE.MeshStandardMaterial({
+    color: 0x795238,
+    roughness: 1
+});
+
+// Reusable shapes.
+const rockGeometry = new THREE.DodecahedronGeometry(0.6, 0);
+
+const bushGeometry = new THREE.SphereGeometry(0.7, 8, 6);
+
+const logGeometry = new THREE.CylinderGeometry(
+    0.22, 0.22, 2.2, 7
+);
+
+// Create a rock.
+function createRock(x, z, scale = 1) {
+    const rock = new THREE.Mesh(rockGeometry, rockMaterial);
+
+    rock.position.set(x, 0.35 * scale, z);
+    rock.scale.set(
+        scale * 1.2,
+        scale * 0.8,
+        scale
+    );
+
+    rock.rotation.set(
+        Math.random() * 0.3,
+        Math.random() * Math.PI,
+        Math.random() * 0.3
+    );
+
+    rock.castShadow = true;
+    rock.receiveShadow = true;
+
+    scene.add(rock);
+}
+
+// Create a bush.
+function createBush(x, z, scale = 1, colour = 0) {
+    const bush = new THREE.Group();
+
+    // Three overlapping spheres create a leafy cluster.
+    const positions = [
+        [-0.35, 0.45, 0],
+        [0.35, 0.5, 0.05],
+        [0, 0.75, -0.3]
+    ];
+
+    positions.forEach(([offsetX, offsetY, offsetZ]) => {
+        const leaves = new THREE.Mesh(
+            bushGeometry,
+            bushMaterials[colour]
+        );
+
+        leaves.position.set(offsetX, offsetY, offsetZ);
+        leaves.scale.set(1, 0.85, 0.9);
+        leaves.castShadow = true;
+
+        bush.add(leaves);
+    });
+
+    bush.position.set(x, 0, z);
+    bush.scale.setScalar(scale);
+
+    scene.add(bush);
+}
+
+// Create a fallen log.
+function createLog(x, z, rotation = 0, scale = 1) {
+    const log = new THREE.Mesh(logGeometry, logMaterial);
+
+    log.rotation.z = Math.PI / 2;
+    log.rotation.y = rotation;
+
+    log.position.set(x, 0.25 * scale, z);
+    log.scale.setScalar(scale);
+
+    log.castShadow = true;
+    log.receiveShadow = true;
+
+    scene.add(log);
+}
+
+// Scatter rocks around the woodland.
+[
+    [-12, -10, 0.8],
+    [-8, -12, 0.6],
+    [2, -12, 0.9],
+    [9, -11, 0.7],
+    [12, -6, 0.9],
+    [13, 3, 0.6],
+    [10, 11, 0.8],
+    [3, 12, 0.7],
+    [-7, 12, 0.9],
+    [-12, 5, 0.7],
+    [-13, -3, 0.8]
+].forEach(([x, z, scale]) => {
+    createRock(x, z, scale);
+});
+
+// Scatter bushes around the woodland.
+[
+    [-11, -8, 0.9, 0],
+    [-5, -12, 1.0, 1],
+    [6, -12, 0.8, 2],
+    [12, -8, 1.1, 0],
+    [13, 0, 0.9, 1],
+    [11, 9, 1.0, 2],
+    [6, 12, 0.8, 0],
+    [-5, 13, 1.1, 1],
+    [-12, 9, 0.9, 2],
+    [-13, -1, 0.8, 0]
+].forEach(([x, z, scale, colour]) => {
+    createBush(x, z, scale, colour);
+});
+
+// Place fallen logs around the edges.
+[
+    [-10, -13, 0.3, 1.0],
+    [10, -12, 0.8, 0.9],
+    [13, 7, 1.2, 1.0],
+    [-11, 11, -0.5, 1.1]
+].forEach(([x, z, rotation, scale]) => {
+    createLog(x, z, rotation, scale);
+});
+
+
+ // --------------------------------------------------
+ // 6. Woodland pond
+ // --------------------------------------------------
+
+// Create the pond's outer bank.
+const pondBankGeometry = new THREE.CircleGeometry(3.5, 32);
+
+const pondBankMaterial = new THREE.MeshStandardMaterial({
+    color: 0x9b9874,
+    roughness: 1
+});
+
+const pondBank = new THREE.Mesh(
+    pondBankGeometry,
+    pondBankMaterial
+);
+
+pondBank.rotation.x = -Math.PI / 2;
+pondBank.position.set(7, 0.025, 4);
+pondBank.scale.set(1.15, 0.8, 1);
+pondBank.receiveShadow = true;
+
+scene.add(pondBank);
+
+// Create the water.
+const pondGeometry = new THREE.CircleGeometry(3, 32);
+
+const pondMaterial = new THREE.MeshStandardMaterial({
+    color: 0x438fa5,
+    roughness: 0.2,
+    metalness: 0.1
+});
+
+const pond = new THREE.Mesh(
+    pondGeometry,
+    pondMaterial
+);
+
+pond.rotation.x = -Math.PI / 2;
+pond.position.set(7, 0.06, 4);
+pond.scale.set(1.15, 0.8, 1);
+
+scene.add(pond);
+
+// Add stones around the pond.
+[
+    [3.8, 3.0, 0.45],
+    [4.5, 1.6, 0.35],
+    [6.0, 0.9, 0.4],
+    [8.3, 1.3, 0.5],
+    [10.0, 2.6, 0.35],
+    [10.5, 4.4, 0.45],
+    [9.0, 6.5, 0.4],
+    [6.5, 6.9, 0.5],
+    [4.2, 5.7, 0.4]
+].forEach(([x, z, scale]) => {
+    createRock(x, z, scale);
+});
+
+// Add a few plants around the water.
+[
+    [3.8, 5.0, 0.7, 1],
+    [9.8, 5.8, 0.8, 2],
+    [10.2, 2.0, 0.7, 0],
+    [5.0, 1.8, 0.6, 1]
+].forEach(([x, z, scale, colour]) => {
+    createBush(x, z, scale, colour);
+});
 
 // --------------------------------------------------
 // 4. Character and movement variables
