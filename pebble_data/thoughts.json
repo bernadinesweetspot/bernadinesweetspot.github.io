@@ -501,5 +501,59 @@
         "type": "reflection",
         "focus_activity": "explore",
         "timestamp": "2026-11-11T00:31:21+00:00"
+    },
+    {
+        "thought": "I've been spending quite a bit of time resting lately.",
+        "type": "reflection",
+        "focus_activity": "rest",
+        "timestamp": "2026-11-11T00:32:10+00:00"
+    },
+    {
+        "thought": "I've been spending time thinking about things lately.",
+        "type": "reflection",
+        "focus_activity": "reflect",
+        "timestamp": "2026-11-11T00:32:58+00:00"
+    },
+    {
+        "thought": "I've been exploring quite a bit lately. I wonder what else I might discover.",
+        "type": "reflection",
+        "focus_activity": "explore",
+        "timestamp": "2026-11-11T00:34:03+00:00"
+    },
+    {
+        "thought": "I've been playing quite a bit lately. I wonder what else I could do?",
+        "type": "reflection",
+        "focus_activity": "play",
+        "timestamp": "2026-11-11T00:35:11+00:00"
+    },
+    {
+        "thought": "I've been spending quite a bit of time resting lately.",
+        "type": "reflection",
+        "focus_activity": "rest",
+        "timestamp": "2026-11-11T00:35:56+00:00"
+    },
+    {
+        "thought": "I've been spending time thinking about things lately.",
+        "type": "reflection",
+        "focus_activity": "reflect",
+        "timestamp": "2026-11-11T00:36:36+00:00"
+    },
+    {
+        "thought": "I've been playing quite a bit lately. I wonder what else I could do?",
+        "type": "reflection",
+        "focus_activity": "play",
+        "timestamp": "2026-11-11T00:37:20+00:00"
+    },
+    {
+        "thought": "I've been exploring quite a bit lately. I wonder what else I might discover.",
+        "type": "reflection",
+        "focus_activity": "explore",
+        "timestamp": "2026-11-11T00:37:47+00:00"
+    },
+    {
+        "thought": "I've been spending time thinking about things lately.",
+        "type": "reflection",
+        "focus_activity": "reflect",
+        "timestamp": "2026-11-11T00:38:48+00:00"
     }
 ]

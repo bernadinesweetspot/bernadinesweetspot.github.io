@@ -677,6 +677,48 @@ def search_memories(memory_path, keyword):
     return results
 
 
+def search_diary(diary_path, keyword):
+    """Search Pebble's diary for a word or phrase."""
+
+    # Load all existing diary entries.
+    diary = load_json_file(diary_path)
+
+    if diary is None:
+        return []
+
+    # Make sure the diary contains a list.
+    if not isinstance(diary, list):
+        print("ERROR: The diary must contain a list.")
+        return []
+
+    # Remove unnecessary spaces and ignore capitalisation.
+    keyword = keyword.strip().casefold()
+
+    # Don't search if the keyword is empty.
+    if not keyword:
+        print("Please enter a search term.")
+        return []
+
+    # Find diary entries containing the keyword.
+    results = []
+
+    for entry in diary:
+
+        if not isinstance(entry, dict):
+            continue
+
+        # Search every text field in the diary entry.
+        searchable_text = " ".join(
+            value
+            for value in entry.values()
+            if isinstance(value, str)
+        )
+
+        if keyword in searchable_text.casefold():
+            results.append(entry)
+
+    return results
+
 
 def delete_memory(memory_path, memory_id):
     """Delete one of Pebble's memories using its ID."""
@@ -866,6 +908,38 @@ def main():
                 print(f"Remembered: {memory['content']}")
         else:
             print("\nNo matching memories found.")
+
+
+    # Ask whether to search Pebble's diary.
+    diary_search_answer = input(
+        "\nWould you like to search Pebble's diary? (y/n): "
+    )
+
+    if diary_search_answer.lower() == "y":
+        keyword = input("What would you like to search for? ")
+
+        results = search_diary(
+            data_folder / "diary.json",
+            keyword
+        )
+
+        if results:
+            print(f"\nFound {len(results)} matching diary entries:")
+
+            for entry in results:
+                print("\n--- Diary Entry ---")
+                print(f"Experience: {entry.get('experience', 'Not recorded')}")
+                print(f"Type: {entry.get('type', 'Unknown')}")
+                print(f"Timestamp: {entry.get('timestamp', 'Unknown')}")
+
+                if entry.get("location_name"):
+                    print(f"Location: {entry['location_name']}")
+
+                if entry.get("location_id"):
+                    print(f"Location ID: {entry['location_id']}")
+
+        else:
+            print("\nNo matching diary entries found.")
 
 
     # Ask whether to delete a memory.
