@@ -1,8 +1,10 @@
 {
     "name": "Pebble",
-    "status": "stopped",
-    "current_activity": null,
-    "last_activity": "explore",
+    "status": "running",
+    "current_activity": "play",
+    "last_activity": "reflect",
     "created": "2026-11-10T21:43:26+00:00",
-    "last_updated": "2026-11-11T00:39:58+00:00"
+    "last_updated": "2026-11-11T00:50:26+00:00",
+    "activity_started": "2026-11-11T00:50:26+00:00",
+    "activity_ends": "2026-11-11T00:50:44+00:00"
 }

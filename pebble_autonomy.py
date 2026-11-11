@@ -5,6 +5,7 @@ import time
 
 from pebble_decisions import choose_activity
 from pebble_reflection import reflect
+from pebble_environment.location_memory import update_location_memory
 from pebble_environment.environment import EnvironmentTracker
 
 from datetime import datetime, timedelta
@@ -139,6 +140,7 @@ def record_location_visit(location):
         json.dump(diary, file, indent=4)
 
     print(f"Pebble recorded a location visit: {location['name']}")
+    update_location_memory(location)
 
 
 # --------------------------------------------------
