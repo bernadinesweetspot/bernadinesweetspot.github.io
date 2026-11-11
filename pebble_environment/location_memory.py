@@ -147,3 +147,95 @@ def get_location_memory(location_id):
         return None
 
     return memories.get(location_id)
+
+
+def record_location_activity(location, activity):
+    """Record an activity Pebble completed at a recognised location."""
+
+    # Check that the location information is valid.
+    if not isinstance(location, dict):
+        print("ERROR: Location information must be a dictionary.")
+        return False
+
+    location_id = location.get("id")
+    location_name = location.get("name")
+
+    if not isinstance(location_id, str) or not location_id.strip():
+        print("ERROR: Location is missing a valid ID.")
+        return False
+
+    if not isinstance(location_name, str) or not location_name.strip():
+        print("ERROR: Location is missing a valid name.")
+        return False
+
+    # Check that the activity is valid.
+    if not isinstance(activity, str) or not activity.strip():
+        print("ERROR: Activity must be a valid name.")
+        return False
+
+    activity = activity.strip()
+
+    # Load the existing location memories.
+    memories = load_location_memories()
+
+    if memories is None:
+        return False
+
+    # Do not create or overwrite a location visit.
+    if location_id not in memories:
+        print(
+            f"ERROR: No existing visit record for {location_name}."
+        )
+        return False
+
+    location_memory = memories[location_id]
+
+    if not isinstance(location_memory, dict):
+        print(
+            f"ERROR: Location memory for {location_id} "
+            "has an invalid structure."
+        )
+        return False
+
+    # Create the activity counts if this is the first recorded activity.
+    if "activity_counts" not in location_memory:
+        location_memory["activity_counts"] = {}
+
+    activity_counts = location_memory["activity_counts"]
+
+    if not isinstance(activity_counts, dict):
+        print(
+            f"ERROR: Activity counts for {location_name} "
+            "have an invalid structure."
+        )
+        return False
+
+    # Validate the existing count before increasing it.
+    count = activity_counts.get(activity, 0)
+
+    if (
+        not isinstance(count, int)
+        or isinstance(count, bool)
+        or count < 0
+    ):
+        print(
+            f"ERROR: Invalid activity count for {activity} "
+            f"at {location_name}."
+        )
+        return False
+
+    # Record the completed activity.
+    activity_counts[activity] = count + 1
+
+    # Save without changing the existing visit information.
+    if save_location_memories(memories):
+        print(
+            f"Pebble remembers {activity} at {location_name}."
+        )
+        print(
+            f"Total {activity} activities here: "
+            f"{activity_counts[activity]}"
+        )
+        return True
+
+    return False

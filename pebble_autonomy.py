@@ -8,6 +8,7 @@ from pebble_reflection import reflect
 from pebble_environment.location_memory import (
     load_location_memories,
     update_location_memory,
+    record_location_activity,
 )
 
 from pebble_environment.locations import LOCATIONS
@@ -88,7 +89,8 @@ def save_state(state):
         json.dump(state, file, indent=4)
 
 
-def record_activity(activity):
+
+def record_activity(activity, location=None):
     # Load Pebble's existing diary.
     if DIARY_FILE.exists():
         with DIARY_FILE.open("r", encoding="utf-8") as file:
@@ -110,6 +112,11 @@ def record_activity(activity):
         "timestamp": timestamp(),
     }
 
+    # Record the location if Pebble is somewhere recognised.
+    if location is not None:
+        entry["location_id"] = location["id"]
+        entry["location_name"] = location["name"]
+
     diary.append(entry)
 
     # Save the updated diary.
@@ -117,6 +124,12 @@ def record_activity(activity):
         json.dump(diary, file, indent=4)
 
     print(f"Pebble recorded a diary entry: {entry['experience']}")
+
+    if location is not None:
+        print(f"Location recorded: {location['name']}")
+
+        # Record the completed activity at this location.
+        record_location_activity(location, activity)
 
 
 def record_location_visit(location):
@@ -438,7 +451,11 @@ def run_pebble():
 
             if completed is True:
                 state["last_activity"] = activity
-                record_activity(activity)
+
+                # Record the activity and Pebble's current location.
+                current_location = environment_tracker.get_current_location()
+                record_activity(activity, current_location)
+
                 reflect()
 
             state["current_activity"] = None

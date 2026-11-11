@@ -831,5 +831,215 @@
         "type": "reflection",
         "focus_activity": "explore",
         "timestamp": "2026-11-11T01:33:49+00:00"
+    },
+    {
+        "thought": "I've been spending time thinking about things lately.",
+        "type": "reflection",
+        "focus_activity": "reflect",
+        "timestamp": "2026-11-11T10:31:10+00:00"
+    },
+    {
+        "thought": "I've been spending quite a bit of time resting lately.",
+        "type": "reflection",
+        "focus_activity": "rest",
+        "timestamp": "2026-11-11T10:33:03+00:00"
+    },
+    {
+        "thought": "I've been playing quite a bit lately. I wonder what else I could do?",
+        "type": "reflection",
+        "focus_activity": "play",
+        "timestamp": "2026-11-11T10:33:40+00:00"
+    },
+    {
+        "thought": "I've been exploring quite a bit lately. I wonder what else I might discover.",
+        "type": "reflection",
+        "focus_activity": "explore",
+        "timestamp": "2026-11-11T10:34:17+00:00"
+    },
+    {
+        "thought": "I've been spending quite a bit of time resting lately.",
+        "type": "reflection",
+        "focus_activity": "rest",
+        "timestamp": "2026-11-11T10:35:00+00:00"
+    },
+    {
+        "thought": "I've been playing quite a bit lately. I wonder what else I could do?",
+        "type": "reflection",
+        "focus_activity": "play",
+        "timestamp": "2026-11-11T10:35:47+00:00"
+    },
+    {
+        "thought": "I've been spending quite a bit of time resting lately.",
+        "type": "reflection",
+        "focus_activity": "rest",
+        "timestamp": "2026-11-11T10:36:19+00:00"
+    },
+    {
+        "thought": "I've been exploring quite a bit lately. I wonder what else I might discover.",
+        "type": "reflection",
+        "focus_activity": "explore",
+        "timestamp": "2026-11-11T10:36:52+00:00"
+    },
+    {
+        "thought": "I've been spending time thinking about things lately.",
+        "type": "reflection",
+        "focus_activity": "reflect",
+        "timestamp": "2026-11-11T10:37:30+00:00"
+    },
+    {
+        "thought": "I've been spending quite a bit of time resting lately.",
+        "type": "reflection",
+        "focus_activity": "rest",
+        "timestamp": "2026-11-11T10:38:04+00:00"
+    },
+    {
+        "thought": "I've been spending time thinking about things lately.",
+        "type": "reflection",
+        "focus_activity": "reflect",
+        "timestamp": "2026-11-11T10:39:24+00:00"
+    },
+    {
+        "thought": "I've been playing quite a bit lately. I wonder what else I could do?",
+        "type": "reflection",
+        "focus_activity": "play",
+        "timestamp": "2026-11-11T10:40:07+00:00"
+    },
+    {
+        "thought": "I've been spending time thinking about things lately.",
+        "type": "reflection",
+        "focus_activity": "reflect",
+        "timestamp": "2026-11-11T10:40:58+00:00"
+    },
+    {
+        "thought": "I've been spending quite a bit of time resting lately.",
+        "type": "reflection",
+        "focus_activity": "rest",
+        "timestamp": "2026-11-11T10:41:36+00:00"
+    },
+    {
+        "thought": "I've been playing quite a bit lately. I wonder what else I could do?",
+        "type": "reflection",
+        "focus_activity": "play",
+        "timestamp": "2026-11-11T10:42:21+00:00"
+    },
+    {
+        "thought": "I've been spending quite a bit of time resting lately.",
+        "type": "reflection",
+        "focus_activity": "rest",
+        "timestamp": "2026-11-11T10:43:10+00:00"
+    },
+    {
+        "thought": "I've been exploring quite a bit lately. I wonder what else I might discover.",
+        "type": "reflection",
+        "focus_activity": "explore",
+        "timestamp": "2026-11-11T10:43:31+00:00"
+    },
+    {
+        "thought": "I've been spending time thinking about things lately.",
+        "type": "reflection",
+        "focus_activity": "reflect",
+        "timestamp": "2026-11-11T10:44:05+00:00"
+    },
+    {
+        "thought": "I've been playing quite a bit lately. I wonder what else I could do?",
+        "type": "reflection",
+        "focus_activity": "play",
+        "timestamp": "2026-11-11T10:44:48+00:00"
+    },
+    {
+        "thought": "I've been spending quite a bit of time resting lately.",
+        "type": "reflection",
+        "focus_activity": "rest",
+        "timestamp": "2026-11-11T10:45:38+00:00"
+    },
+    {
+        "thought": "I've been spending time thinking about things lately.",
+        "type": "reflection",
+        "focus_activity": "reflect",
+        "timestamp": "2026-11-11T10:47:00+00:00"
+    },
+    {
+        "thought": "I've been playing quite a bit lately. I wonder what else I could do?",
+        "type": "reflection",
+        "focus_activity": "play",
+        "timestamp": "2026-11-11T10:47:36+00:00"
+    },
+    {
+        "thought": "I've been spending quite a bit of time resting lately.",
+        "type": "reflection",
+        "focus_activity": "rest",
+        "timestamp": "2026-11-11T11:03:18+00:00"
+    },
+    {
+        "thought": "I've been exploring quite a bit lately. I wonder what else I might discover.",
+        "type": "reflection",
+        "focus_activity": "explore",
+        "timestamp": "2026-11-11T11:03:50+00:00"
+    },
+    {
+        "thought": "I've been spending quite a bit of time resting lately.",
+        "type": "reflection",
+        "focus_activity": "rest",
+        "timestamp": "2026-11-11T11:14:16+00:00"
+    },
+    {
+        "thought": "I've been playing quite a bit lately. I wonder what else I could do?",
+        "type": "reflection",
+        "focus_activity": "play",
+        "timestamp": "2026-11-11T11:14:51+00:00"
+    },
+    {
+        "thought": "I've been exploring quite a bit lately. I wonder what else I might discover.",
+        "type": "reflection",
+        "focus_activity": "explore",
+        "timestamp": "2026-11-11T11:15:58+00:00"
+    },
+    {
+        "thought": "I've been spending time thinking about things lately.",
+        "type": "reflection",
+        "focus_activity": "reflect",
+        "timestamp": "2026-11-11T11:16:36+00:00"
+    },
+    {
+        "thought": "I've been playing quite a bit lately. I wonder what else I could do?",
+        "type": "reflection",
+        "focus_activity": "play",
+        "timestamp": "2026-11-11T11:18:12+00:00"
+    },
+    {
+        "thought": "I've been spending time thinking about things lately.",
+        "type": "reflection",
+        "focus_activity": "reflect",
+        "timestamp": "2026-11-11T11:18:47+00:00"
+    },
+    {
+        "thought": "I've been exploring quite a bit lately. I wonder what else I might discover.",
+        "type": "reflection",
+        "focus_activity": "explore",
+        "timestamp": "2026-11-11T11:19:26+00:00"
+    },
+    {
+        "thought": "I've been playing quite a bit lately. I wonder what else I could do?",
+        "type": "reflection",
+        "focus_activity": "play",
+        "timestamp": "2026-11-11T11:20:41+00:00"
+    },
+    {
+        "thought": "I've been spending quite a bit of time resting lately.",
+        "type": "reflection",
+        "focus_activity": "rest",
+        "timestamp": "2026-11-11T11:21:11+00:00"
+    },
+    {
+        "thought": "I've been spending time thinking about things lately.",
+        "type": "reflection",
+        "focus_activity": "reflect",
+        "timestamp": "2026-11-11T11:22:34+00:00"
+    },
+    {
+        "thought": "I've been playing quite a bit lately. I wonder what else I could do?",
+        "type": "reflection",
+        "focus_activity": "play",
+        "timestamp": "2026-11-11T11:23:16+00:00"
     }
 ]
