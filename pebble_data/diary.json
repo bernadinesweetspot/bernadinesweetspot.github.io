@@ -2015,5 +2015,414 @@
         "experience": "Pebble spent time reflecting.",
         "type": "activity",
         "timestamp": "2026-11-11T00:50:26+00:00"
+    },
+    {
+        "experience": "Pebble spent time playing.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:50:44+00:00"
+    },
+    {
+        "experience": "Pebble spent time reflecting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:50:54+00:00"
+    },
+    {
+        "experience": "Pebble spent time resting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:51:06+00:00"
+    },
+    {
+        "experience": "Pebble spent time playing.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:51:20+00:00"
+    },
+    {
+        "experience": "Pebble spent time reflecting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:51:33+00:00"
+    },
+    {
+        "experience": "Pebble spent time playing.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:51:52+00:00"
+    },
+    {
+        "experience": "Pebble spent time resting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:52:12+00:00"
+    },
+    {
+        "experience": "Pebble spent time reflecting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:52:26+00:00"
+    },
+    {
+        "experience": "Pebble spent time playing.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:52:37+00:00"
+    },
+    {
+        "experience": "Pebble finished exploring.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:52:42+00:00"
+    },
+    {
+        "experience": "Pebble spent time resting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:53:00+00:00"
+    },
+    {
+        "experience": "Pebble spent time playing.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:53:15+00:00"
+    },
+    {
+        "experience": "Pebble spent time resting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:53:25+00:00"
+    },
+    {
+        "experience": "Pebble spent time reflecting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:53:45+00:00"
+    },
+    {
+        "experience": "Pebble spent time resting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:54:03+00:00"
+    },
+    {
+        "experience": "Pebble finished exploring.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:54:11+00:00"
+    },
+    {
+        "experience": "Pebble spent time reflecting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:54:25+00:00"
+    },
+    {
+        "experience": "Pebble finished exploring.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:54:35+00:00"
+    },
+    {
+        "experience": "Pebble spent time playing.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:54:53+00:00"
+    },
+    {
+        "experience": "Pebble spent time resting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:55:08+00:00"
+    },
+    {
+        "experience": "Pebble spent time reflecting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:55:24+00:00"
+    },
+    {
+        "experience": "Pebble spent time playing.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:55:34+00:00"
+    },
+    {
+        "experience": "Pebble spent time resting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:55:51+00:00"
+    },
+    {
+        "experience": "Pebble finished exploring.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:56:04+00:00"
+    },
+    {
+        "experience": "Pebble spent time resting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:56:14+00:00"
+    },
+    {
+        "experience": "Pebble spent time reflecting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:56:28+00:00"
+    },
+    {
+        "experience": "Pebble spent time resting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:56:43+00:00"
+    },
+    {
+        "experience": "Pebble finished exploring.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:56:46+00:00"
+    },
+    {
+        "experience": "Pebble spent time playing.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:57:00+00:00"
+    },
+    {
+        "experience": "Pebble finished exploring.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:57:08+00:00"
+    },
+    {
+        "experience": "Pebble spent time playing.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:57:26+00:00"
+    },
+    {
+        "experience": "Pebble spent time resting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:57:40+00:00"
+    },
+    {
+        "experience": "Pebble finished exploring.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:57:52+00:00"
+    },
+    {
+        "experience": "Pebble spent time resting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:58:08+00:00"
+    },
+    {
+        "experience": "Pebble spent time playing.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:58:20+00:00"
+    },
+    {
+        "experience": "Pebble spent time resting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:58:34+00:00"
+    },
+    {
+        "experience": "Pebble finished exploring.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:58:46+00:00"
+    },
+    {
+        "experience": "Pebble spent time resting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:59:01+00:00"
+    },
+    {
+        "experience": "Pebble spent time playing.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:59:17+00:00"
+    },
+    {
+        "experience": "Pebble spent time reflecting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:59:36+00:00"
+    },
+    {
+        "experience": "Pebble spent time resting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T00:59:52+00:00"
+    },
+    {
+        "experience": "Pebble visited Woodland Pond.",
+        "type": "location_visit",
+        "location_id": "woodland_pond",
+        "location_name": "Woodland Pond",
+        "timestamp": "2026-11-11T01:00:02+00:00"
+    },
+    {
+        "experience": "Pebble finished exploring.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:00:02+00:00"
+    },
+    {
+        "experience": "Pebble spent time playing.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:00:13+00:00"
+    },
+    {
+        "experience": "Pebble finished exploring.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:00:21+00:00"
+    },
+    {
+        "experience": "Pebble spent time resting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:00:31+00:00"
+    },
+    {
+        "experience": "Pebble finished exploring.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:00:33+00:00"
+    },
+    {
+        "experience": "Pebble spent time playing.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:00:47+00:00"
+    },
+    {
+        "experience": "Pebble spent time resting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:01:04+00:00"
+    },
+    {
+        "experience": "Pebble spent time reflecting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:01:24+00:00"
+    },
+    {
+        "experience": "Pebble spent time playing.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:01:37+00:00"
+    },
+    {
+        "experience": "Pebble visited Woodland Pond.",
+        "type": "location_visit",
+        "location_id": "woodland_pond",
+        "location_name": "Woodland Pond",
+        "timestamp": "2026-11-11T01:01:46+00:00"
+    },
+    {
+        "experience": "Pebble finished exploring.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:01:46+00:00"
+    },
+    {
+        "experience": "Pebble spent time playing.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:02:04+00:00"
+    },
+    {
+        "experience": "Pebble spent time resting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:02:14+00:00"
+    },
+    {
+        "experience": "Pebble spent time playing.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:02:24+00:00"
+    },
+    {
+        "experience": "Pebble finished exploring.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:02:33+00:00"
+    },
+    {
+        "experience": "Pebble spent time resting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:02:45+00:00"
+    },
+    {
+        "experience": "Pebble spent time playing.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:03:04+00:00"
+    },
+    {
+        "experience": "Pebble spent time resting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:03:20+00:00"
+    },
+    {
+        "experience": "Pebble finished exploring.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:03:30+00:00"
+    },
+    {
+        "experience": "Pebble spent time reflecting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:03:40+00:00"
+    },
+    {
+        "experience": "Pebble spent time playing.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:03:52+00:00"
+    },
+    {
+        "experience": "Pebble spent time reflecting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:04:08+00:00"
+    },
+    {
+        "experience": "Pebble finished exploring.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:04:14+00:00"
+    },
+    {
+        "experience": "Pebble spent time reflecting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:04:29+00:00"
+    },
+    {
+        "experience": "Pebble spent time playing.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:04:44+00:00"
+    },
+    {
+        "experience": "Pebble spent time resting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:05:01+00:00"
+    },
+    {
+        "experience": "Pebble finished exploring.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:05:06+00:00"
+    },
+    {
+        "experience": "Pebble spent time reflecting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:05:26+00:00"
+    },
+    {
+        "experience": "Pebble spent time playing.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:05:43+00:00"
+    },
+    {
+        "experience": "Pebble spent time resting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:05:57+00:00"
+    },
+    {
+        "experience": "Pebble spent time playing.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:06:17+00:00"
+    },
+    {
+        "experience": "Pebble spent time reflecting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:06:27+00:00"
+    },
+    {
+        "experience": "Pebble spent time resting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:06:45+00:00"
+    },
+    {
+        "experience": "Pebble spent time reflecting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:07:02+00:00"
+    },
+    {
+        "experience": "Pebble finished exploring.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:07:03+00:00"
+    },
+    {
+        "experience": "Pebble spent time resting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:07:20+00:00"
+    },
+    {
+        "experience": "Pebble finished exploring.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:07:23+00:00"
+    },
+    {
+        "experience": "Pebble spent time reflecting.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:07:43+00:00"
+    },
+    {
+        "experience": "Pebble finished exploring.",
+        "type": "activity",
+        "timestamp": "2026-11-11T01:07:53+00:00"
     }
 ]

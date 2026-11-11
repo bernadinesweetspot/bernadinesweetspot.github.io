@@ -1,1 +1,8 @@
-{}
+{
+    "woodland_pond": {
+        "location_name": "Woodland Pond",
+        "visits": 2,
+        "first_visited": "2026-11-11T01:00:02+00:00",
+        "last_visited": "2026-11-11T01:01:46+00:00"
+    }
+}
