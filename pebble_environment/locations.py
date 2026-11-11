@@ -2,19 +2,45 @@
 # --------------------------------------------------
 # Pebble's Environment: Known Locations
 # --------------------------------------------------
-
-# This file defines places that Pebble can recognise
-# within its environment.
-
+#
+# This file defines places Pebble can recognise.
+#
 # Each location has:
 # - A unique ID
 # - A display name
 # - A description
+# - A location type
 # - A centre position (x, z)
-# - An area that determines when Pebble is there
+# - An elliptical recognition area
+#
+# Coordinates match the Three.js environment.
 
 
 LOCATIONS = {
+
+    # --------------------------------------------------
+    # Woodland Clearing
+    # --------------------------------------------------
+
+    "woodland_clearing": {
+        "id": "woodland_clearing",
+        "name": "Woodland Clearing",
+        "description": (
+            "An open grassy area surrounded by woodland."
+        ),
+        "type": "natural_landmark",
+
+        "x": 0,
+        "z": 0,
+
+        "radius_x": 3.5,
+        "radius_z": 3.5,
+    },
+
+    # --------------------------------------------------
+    # Woodland Pond
+    # --------------------------------------------------
+
     "woodland_pond": {
         "id": "woodland_pond",
         "name": "Woodland Pond",
@@ -24,28 +50,41 @@ LOCATIONS = {
         ),
         "type": "natural_landmark",
 
-        # Centre of the pond in Three.js coordinates.
         "x": 7,
         "z": 4,
 
-        # Approximate recognition area.
-        # This includes the water and its surrounding bank.
         "radius_x": 4.1,
         "radius_z": 2.9,
-    }
+    },
+
+    # --------------------------------------------------
+    # Fallen Log
+    # --------------------------------------------------
+
+    "fallen_log": {
+        "id": "fallen_log",
+        "name": "Fallen Log",
+        "description": (
+            "A fallen tree trunk resting among "
+            "the woodland scenery."
+        ),
+        "type": "woodland_feature",
+
+        "x": -10,
+        "z": -13,
+
+        "radius_x": 2.5,
+        "radius_z": 1.6,
+    },
 }
 
 
 # --------------------------------------------------
-# Look up locations
+# Location lookup
 # --------------------------------------------------
 
 def get_location(location_id):
-    """
-    Return a location using its unique ID.
-
-    Returns None if the location doesn't exist.
-    """
+    """Return a location using its unique ID."""
 
     return LOCATIONS.get(location_id)
 
@@ -60,8 +99,7 @@ def get_location_at(x, z):
 
     for location in LOCATIONS.values():
 
-        # Work out how far the coordinates are from
-        # the centre of this location.
+        # Measure distance from the location's centre.
         distance_x = (
             (x - location["x"]) / location["radius_x"]
         )
@@ -70,8 +108,7 @@ def get_location_at(x, z):
             (z - location["z"]) / location["radius_z"]
         )
 
-        # An elliptical area allows the pond to have
-        # different widths along its X and Z axes.
+        # Use an ellipse to define the recognition area.
         distance = distance_x ** 2 + distance_z ** 2
 
         if distance <= 1:

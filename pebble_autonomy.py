@@ -5,7 +5,12 @@ import time
 
 from pebble_decisions import choose_activity
 from pebble_reflection import reflect
-from pebble_environment.location_memory import update_location_memory
+from pebble_environment.location_memory import (
+    load_location_memories,
+    update_location_memory,
+)
+
+from pebble_environment.locations import LOCATIONS
 from pebble_environment.environment import EnvironmentTracker
 
 from datetime import datetime, timedelta
@@ -225,8 +230,71 @@ def start_server():
 def explore(state, environment_tracker):
     global pending_command
 
-    destination_x = round(random.uniform(-12, 12), 2)
-    destination_z = round(random.uniform(-12, 12), 2)
+    # --------------------------------------------------
+    # Choose an exploration destination
+    # --------------------------------------------------
+
+    memories = load_location_memories()
+
+    current_location = environment_tracker.get_current_location()
+
+    current_location_id = (
+        current_location["id"]
+        if current_location
+        else None
+    )
+
+    if memories is None:
+        # If location memories cannot be read, explore randomly.
+        print("Pebble couldn't access its location memories.")
+        destination_x = round(random.uniform(-12, 12), 2)
+        destination_z = round(random.uniform(-12, 12), 2)
+
+    else:
+        # Separate recognised places into visited and unvisited.
+        unvisited_locations = [
+            location
+            for location in LOCATIONS.values()
+            if location["id"] not in memories
+            and location["id"] != current_location_id
+        ]
+
+        visited_locations = [
+            location
+            for location in LOCATIONS.values()
+            if location["id"] in memories
+            and location["id"] != current_location_id
+        ]
+
+        chosen_location = None
+
+        # Prefer discovering somewhere new.
+        if unvisited_locations and random.random() < 0.7:
+            chosen_location = random.choice(unvisited_locations)
+
+        # Once places are familiar, sometimes revisit them.
+        elif visited_locations and random.random() < 0.6:
+            chosen_location = random.choice(visited_locations)
+
+        if chosen_location:
+            destination_x = chosen_location["x"]
+            destination_z = chosen_location["z"]
+
+            print(
+                f"Pebble chose to explore "
+                f"{chosen_location['name']}."
+            )
+
+        else:
+            # Explore an otherwise random part of the environment.
+            destination_x = round(random.uniform(-12, 12), 2)
+            destination_z = round(random.uniform(-12, 12), 2)
+
+            print("Pebble chose to explore somewhere freely.")
+
+    # --------------------------------------------------
+    # Send the destination to Three.js
+    # --------------------------------------------------
 
     command = {
         "type": "move_to",
@@ -244,6 +312,7 @@ def explore(state, environment_tracker):
         f"({destination_x}, {destination_z})."
     )
 
+    # Wait for Pebble to reach the destination.
     finished = exploration_finished.wait(
         timeout=EXPLORATION_TIMEOUT
     )
